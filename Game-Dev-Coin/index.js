@@ -17,6 +17,13 @@ app.listen(port, () => {
 
 const bot = new TelegramBot(process.env.BOT_TOKEN, { polling: true });
 
+// ✅ Set bot commands
+bot.setMyCommands([
+    { command: 'start', description: 'Start Game' },
+    { command: 'Link', description: 'Referral link' },
+]);
+
+// /start handler
 bot.onText(/\/start/, (msg) => {
     const chatId = msg.chat.id;
     const webAppUrl = "https://my-server-production-17ad.up.railway.app/";
@@ -25,6 +32,23 @@ bot.onText(/\/start/, (msg) => {
 You can join hands with us and collect $DevG Coins.
 You can withdraw those $DevG Coins every day after starting this project. So stay with us.
 Also join our channels because we will be posting details every day. Thank you..`;
+
+// ✅ /link handler (opens mini app at "Friends" tab)
+bot.onText(/\/link/, (msg) => {
+    const chatId = msg.chat.id;
+    const miniAppUrl = `https://my-server-production-17ad.up.railway.app/?start=ref`;
+
+    bot.sendMessage(chatId, "Thank you very much,\n" +
+        "We sincerely appreciate your support for this project.\n" +
+        "You can get $DevG Coin from this. After starting the project, you can get that Coin to your wallet daily..", {
+        reply_markup: {
+            inline_keyboard: [
+                [{ text: "👥 Open Friends Tab", web_app: { url: miniAppUrl } }]
+            ]
+        }
+    });
+});
+
 
     bot.sendMessage(chatId, message, {
         reply_markup: {
